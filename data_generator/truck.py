@@ -61,7 +61,7 @@ class Truck:
         return np.arccos(np.sin(math.radians(lat1)) * np.sin(math.radians(lat2)) + np.cos(math.radians(lat1)) * np.cos(
             math.radians(lat2)) * np.cos(math.radians(lon1) - math.radians(lon2))) * 6371
 
-    def drive_truck(self):
+    def drive(self):
         start = {'lng': uniform(2.2632, 2.4083),
                  'lat': uniform(48.8319, 48.9019)}
         end = {'lng': uniform(2.2632, 2.4083),
@@ -82,7 +82,7 @@ if __name__ == "__main__":
         'lng': 2.377816,
         'lat': 48.874886
     }
-    truck.drive_truck()
+    truck.drive()
     print(truck.coord[0])
     print(truck.coord[-1])
     for i in range(20000):
