@@ -1,9 +1,10 @@
 import math
-
 import numpy as np
 import requests
 import geopy.distance
 from random import uniform
+from geojsonio import display
+import json
 
 
 class Truck:
@@ -32,21 +33,22 @@ class Truck:
         print(call.json())
         return coordinates
 
-    def get_coordinates(self, time):
-        distance = self.speed * time
-        i = 0
-        #print(distance)
-        if distance > sum(self.distances):
-            exit()
-
-        else :
+    def get_coordinates(self):
+        distance = 0
+        L = []
+        i=0
+        while distance < sum(self.distances):
             while distance > 0 and i < len(self.distances)-1:
                 distance -= self.distances[i]
                 i += 1
 
             distance += self.distances[i-1]
             advancement = distance / self.distances[i-1]
-            return [self.coord[i-1][0] + advancement * (self.coord[i][0] - self.coord[i-1][0]) ,self.coord[i-1][1] + advancement * (self.coord[i][1] - self.coord[i-1][1])]
+            L.append([self.coord[i-1][0] + advancement * (self.coord[i][0] - self.coord[i-1][0]) ,self.coord[i-1][1] + advancement * (self.coord[i][1] - self.coord[i-1][1])])
+            distance += 1
+        return (L)
+
+
 
     @staticmethod
     def get_distances(coord):
@@ -70,9 +72,19 @@ class Truck:
         self.distances = self.get_distances(self.coord)
         print(sum(self.distances))
 
+    def display_geojson(self):
+        geo_object2 = {
+            "type": "LineString",
+            "coordinates": truck.get_coordinates()
+        }
+        display(json.dumps(geo_object2))
+
+
+
 
 
 if __name__ == "__main__":
+    L = []
     truck = Truck()
     start = {
         'lng': 2.309958,
@@ -85,5 +97,7 @@ if __name__ == "__main__":
     truck.drive()
     print(truck.coord[0])
     print(truck.coord[-1])
-    for i in range(20000):
-        print(truck.get_coordinates(i))
+    print(truck.get_coordinates())
+    print(truck.get_coordinates()[-1])
+
+    #truck.display_geojson()

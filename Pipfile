@@ -9,6 +9,7 @@ verify_ssl = true
 requests = "*"
 numpy = "*"
 geopy = "*"
+geojsonio = "*"
 
 [requires]
 python_version = "3.7"
