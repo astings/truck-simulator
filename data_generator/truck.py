@@ -6,17 +6,21 @@ from random import uniform
 from geojsonio import display
 import json
 import pyproj
+from flotte import Flotte
 
 class Truck:
     count_id = 0
 
-    def __init__(self, speed: int = 10):
+    def __init__(self, flotte, speed: int = 10):
         self.num_id = Truck.count_id
         Truck.count_id += 1
         self.speed = speed
         self.distances = []
         self.coord = []
         self.plan_coord = []
+        self.owner = flotte
+        flotte.truck_list.append(self)
+
 
     @staticmethod
     def generate_itinerary(start: dict, end: dict):
@@ -53,18 +57,6 @@ class Truck:
         return (L)
 
 
-
-    @staticmethod
-    def get_distances(coord):
-        distances = []
-        for i in range(len(coord) - 1):
-            distances.append(geopy.distance.geodesic(coord[i], coord[i + 1]).m)
-        return distances
-
-    @staticmethod
-    def compute_distance(lat1, lon1, lat2, lon2):
-        return np.arccos(np.sin(math.radians(lat1)) * np.sin(math.radians(lat2)) + np.cos(math.radians(lat1)) * np.cos(
-            math.radians(lat2)) * np.cos(math.radians(lon1) - math.radians(lon2))) * 6371
     @staticmethod
     def change_coordinate_system(coord):
         new_coordinate = []
@@ -75,8 +67,8 @@ class Truck:
             new_coordinate.append([pyproj.transform(wgs84, isn2004, coordonnee[0], coordonnee[1])[0],pyproj.transform(wgs84, isn2004, coordonnee[0], coordonnee[1])[1]])
         return new_coordinate
 
-    def new_coordinate_distance(self):
-        coord = self.plan_coord
+    @staticmethod
+    def get_distance(coord):
         distance = []
         for i in range(len(coord)-1):
             distance.append(math.sqrt(math.pow(coord[i+1][0]-coord[i][0],2)+math.pow(coord[i+1][1]-coord[i][1],2)))
@@ -89,7 +81,7 @@ class Truck:
                'lat': uniform(48.8319, 48.9019)}
         self.coord = self.generate_itinerary(start, end)
         self.plan_coord = self.change_coordinate_system(self.coord)
-        self.distances = self.new_coordinate_distance()
+        self.distances = self.get_distance(self.plan_coord)
         print(sum(self.distances))
 
     def display_geojson(self):
@@ -106,20 +98,17 @@ class Truck:
 if __name__ == "__main__":
     L = []
     truck = Truck()
-    start = {
-        'lng': 2.309958,
-        'lat': 48.849295
-    }
-    end = {
-        'lng': 2.377816,
-        'lat': 48.874886
-    }
+    truck2 = Truck
+
     truck.drive()
-    print(truck.coord[0])
-    print(truck.coord[-1])
-    print(truck.get_coordinates())
+    truck2.drive()
+
+    #print(truck.coord[0])
+    #print(truck.coord[-1])
+
+
     print(truck.get_coordinates()[-1])
 
     truck.display_geojson()
-    print(truck.plan_coord)
-    print(sum(truck.new_coordinate_distance()))
+
+
