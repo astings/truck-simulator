@@ -34,12 +34,19 @@ class Truck:
 
     def get_coordinates(self, time):
         distance = self.speed * time
-        dist_segment = 0
         i = 0
-        while dist_segment < distance:
-            dist_segment += self.distances[i]
-            i += 1
-        return self.coord[i]
+        #print(distance)
+        if distance > sum(self.distances):
+            exit()
+
+        else :
+            while distance > 0 and i < len(self.distances)-1:
+                distance -= self.distances[i]
+                i += 1
+
+            distance += self.distances[i-1]
+            advancement = distance / self.distances[i-1]
+            return [self.coord[i-1][0] + advancement * (self.coord[i][0] - self.coord[i-1][0]) ,self.coord[i-1][1] + advancement * (self.coord[i][1] - self.coord[i-1][1])]
 
     @staticmethod
     def get_distances(coord):
@@ -62,8 +69,7 @@ class Truck:
         self.coord = self.generate_itinerary(start, end)
         self.distances = self.get_distances(self.coord)
         print(sum(self.distances))
-        for i in range (200):
-            print(self.get_coordinates(1*i))
+
 
 
 if __name__ == "__main__":
@@ -77,3 +83,7 @@ if __name__ == "__main__":
         'lat': 48.874886
     }
     truck.drive_truck()
+    print(truck.coord[0])
+    print(truck.coord[-1])
+    for i in range(20000):
+        print(truck.get_coordinates(i))
