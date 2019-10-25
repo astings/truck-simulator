@@ -6,20 +6,22 @@ from random import uniform
 from geojsonio import display
 import json
 import pyproj
-from flotte import Flotte
+# from flotte import Flotte
 
 class Truck:
     count_id = 0
 
-    def __init__(self, flotte, speed: int = 10):
+    def __init__(self,
+                 # flotte,
+                 speed: int = 10):
         self.num_id = Truck.count_id
         Truck.count_id += 1
         self.speed = speed
         self.distances = []
         self.coord = []
         self.plan_coord = []
-        self.owner = flotte
-        flotte.truck_list.append(self)
+        # self.owner = flotte
+        # flotte.truck_list.append(self)
 
 
     @staticmethod
@@ -35,7 +37,8 @@ class Truck:
         url += '&end=' + str(end['lng']) + ',' + str(end['lat'])
         call = requests.get(url, headers=headers)
         coordinates = call.json()['features'][0]['geometry']['coordinates']
-        print(call.json())
+        call_json = call.json()
+        print(json.dumps(call_json, indent=4, sort_keys=True))
         return coordinates
 
     def get_coordinates(self):
@@ -98,7 +101,7 @@ class Truck:
 if __name__ == "__main__":
     L = []
     truck = Truck()
-    truck2 = Truck
+    truck2 = Truck()
 
     truck.drive()
     truck2.drive()
@@ -110,5 +113,3 @@ if __name__ == "__main__":
     print(truck.get_coordinates()[-1])
 
     truck.display_geojson()
-
-
