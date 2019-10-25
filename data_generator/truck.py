@@ -6,13 +6,16 @@ from random import uniform
 from geojsonio import display
 import json
 import pyproj
-# from flotte import Flotte
+from flotte import Flotte
+from ors_api import ApiOrs
+from shapely.geometry import Polygon
 
 class Truck:
     count_id = 0
+    api_ors = ApiOrs()
 
     def __init__(self,
-                 # flotte,
+                 flotte,
                  speed: int = 10):
         self.num_id = Truck.count_id
         Truck.count_id += 1
@@ -20,25 +23,14 @@ class Truck:
         self.distances = []
         self.coord = []
         self.plan_coord = []
-        # self.owner = flotte
-        # flotte.truck_list.append(self)
+        self.owner = flotte
+        flotte.truck_list.append(self)
 
 
     @staticmethod
     def generate_itinerary(start: dict, end: dict):
-        key = '5b3ce3597851110001cf6248f022aa2ca82b4338a12afb1b17fbd16f'
-        headers = {
-            "Accept": "application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8",
-            'Authorization': key
-        }
-
-        url = 'https://api.openrouteservice.org/v2/directions/driving-car?api_key=' + key
-        url += '&start=' + str(start['lng']) + ',' + str(start['lat'])
-        url += '&end=' + str(end['lng']) + ',' + str(end['lat'])
-        call = requests.get(url, headers=headers)
-        coordinates = call.json()['features'][0]['geometry']['coordinates']
-        call_json = call.json()
-        print(json.dumps(call_json, indent=4, sort_keys=True))
+        call_json = Truck.api_ors.get_direction(start, end)
+        coordinates = call_json['features'][0]['geometry']['coordinates']
         return coordinates
 
     def get_coordinates(self):
@@ -77,11 +69,21 @@ class Truck:
             distance.append(math.sqrt(math.pow(coord[i+1][0]-coord[i][0],2)+math.pow(coord[i+1][1]-coord[i][1],2)))
         return distance
 
+    @staticmethod
+    def generate_random_point():
+        idf_json = requests.get('https://france-geojson.gregoiredavid.fr/repo/departements/75-paris/departement-75-paris.geojson')
+        idf_coords = idf_json.json()["geometry"]["coordinates"][0]
+        idf_polygon = Polygon(idf_coords)
+        min_x, min_y, max_x, max_y = idf_polygon.bounds[0], idf_polygon.bounds[1], idf_polygon.bounds[2], idf_polygon.bounds[3]
+        point = {
+            "lng" : uniform(min_x, max_x),
+            "lat" : uniform(min_y, max_y)
+        }
+        return point
+
     def drive(self):
-        start = {'lng': uniform(2.2632, 2.4083),
-                 'lat': uniform(48.8319, 48.9019)}
-        end = {'lng': uniform(2.2632, 2.4083),
-               'lat': uniform(48.8319, 48.9019)}
+        start = self.generate_random_point()
+        end = self.generate_random_point()
         self.coord = self.generate_itinerary(start, end)
         self.plan_coord = self.change_coordinate_system(self.coord)
         self.distances = self.get_distance(self.plan_coord)
@@ -89,9 +91,17 @@ class Truck:
 
     def display_geojson(self):
         geo_object2 = {
-            "type": "MultiPoint",
-            "coordinates": truck.get_coordinates()
+            "type": "Feature",
+            "geometry": {
+                "type": "MultiPoint",
+                "coordinates": self.get_coordinates()
+            },
+            "properties":{
+                "name": "Truck %i"% self.num_id
+            }
+
         }
+
         display(json.dumps(geo_object2))
 
 
@@ -100,15 +110,13 @@ class Truck:
 
 if __name__ == "__main__":
     L = []
-    flotte = Flotte()
-    for i in range(5):
-        truck = Truck(flotte)
-        truck.drive()
-
-    #print(truck.coord[0])
-    #print(truck.coord[-1])
-
-
-    #print(truck.get_coordinates()[-1])
-
-    flotte.display_geojson()
+    # flotte = Flotte()
+    # for i in range(2):
+    #     truck = Truck(flotte)
+    #     truck.drive()
+    #
+    # flotte.display_geojson()
+    f1 = Flotte()
+    t1 = Truck(flotte=f1)
+    t1.drive()
+    t1.display_geojson()
