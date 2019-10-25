@@ -97,18 +97,17 @@ class Truck:
 
 if __name__ == "__main__":
     L = []
-    truck = Truck()
-    truck2 = Truck
-
-    truck.drive()
-    truck2.drive()
+    flotte = Flotte()
+    for i in range(5):
+        truck = Truck(flotte)
+        truck.drive()
 
     #print(truck.coord[0])
     #print(truck.coord[-1])
 
 
-    print(truck.get_coordinates()[-1])
+    #print(truck.get_coordinates()[-1])
 
-    truck.display_geojson()
+    flotte.display_geojson()
 
 
