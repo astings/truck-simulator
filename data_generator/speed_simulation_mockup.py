@@ -72,3 +72,5 @@ if __name__ == "__main__":
         speed += base_variation * normal(0, 0.5, 1)[0]
         nb_coord_points = segment["way_points"][1] - segment["way_points"][0] + 1
         m.speeds.extend([speed] * nb_coord_points)
+
+    print(m.speeds)
