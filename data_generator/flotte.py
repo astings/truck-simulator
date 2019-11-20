@@ -1,11 +1,10 @@
 from geojsonio import display
 import json
 
-class Flotte:
 
+class Flotte():
     def __init__(self):
         self.truck_list = []
-
 
     def display_geojson(self):
         coord = []
