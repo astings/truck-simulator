@@ -9,7 +9,6 @@ from ors_api import ApiOrs
 from shapely.geometry import Polygon
 from time import time
 from numpy.random import normal
-from operator import itemgetter
 
 
 class Truck:
@@ -33,13 +32,7 @@ class Truck:
     def generate_itinerary(self, start: dict, end: dict):
         call_json = Truck.api_ors.get_direction(start, end)
         self.saved_call = call_json
-        segments = self.saved_call["features"][0]["properties"]["segments"][0]["steps"]
-        seg_coord_index = []
-        for elt in segments:
-            seg_coord_index += elt['way_points']
-        seg_coord_index = list(set(seg_coord_index))
         coordinates = call_json['features'][0]['geometry']['coordinates']
-        relevant_coordinates = itemgetter(*seg_coord_index)(coordinates)
         return coordinates
 
     def get_coordinates(self):
@@ -69,9 +62,7 @@ class Truck:
         transformer = pyproj.Transformer.from_proj(wgs84, isn2004)
         new_coordinate = list(map(list, zip(*coord)))
         result = transformer.transform(new_coordinate[0], new_coordinate[1])
-        # for coordonnee in coord:
-        #     new_coordinate.append([pyproj.transform(wgs84, isn2004, coordonnee[0], coordonnee[1])[0],pyproj.transform(wgs84, isn2004, coordonnee[0], coordonnee[1])[1]])
-        return list(map(list,zip(*result)))
+        return list(map(list, zip(*result)))
 
     @staticmethod
     def get_distance(coord):
@@ -119,13 +110,14 @@ class Truck:
         generate_speeds_time = time()
         if debug:
             print('Time to:\n')
-            print('Generate points: %f'%(generate_points_time - start_time))
-            print('Generate itinerary: %f'%(generate_itinerary_time - generate_points_time))
-            print('Change coord: %f'%(change_coord_sys_time - generate_itinerary_time))
-            print('Calculate distances: %f'%(calc_dist_time - change_coord_sys_time))
-            print('Generate speeds: %f'%(generate_speeds_time - calc_dist_time))
+            print('Generate points: %f' % (generate_points_time - start_time))
+            print('Generate itinerary: %f' % (generate_itinerary_time - generate_points_time))
+            print('Change coord: %f' % (change_coord_sys_time - generate_itinerary_time))
+            print('Calculate distances: %f' % (calc_dist_time - change_coord_sys_time))
+            print('Generate speeds: %f' % (generate_speeds_time - calc_dist_time))
             print('____________________________')
-            print('TOTAL : %f'%(generate_speeds_time - start_time))
+            print('TOTAL : %f' % (generate_speeds_time - start_time))
+            print('Number of coordinates:\n')
             print(len(self.coord))
         return(sum(self.distances))
 
@@ -147,13 +139,7 @@ class Truck:
 
 if __name__ == "__main__":
     L = []
-    # flotte = Flotte()
-    # for i in range(2):
-    #     truck = Truck(flotte)
-    #     truck.drive()
-    #
-    # flotte.display_geojson()
-    # help(pyproj.Transformer)
+
     f1 = Flotte()
     t1 = Truck(flotte=f1)
     for _ in range(15):
