@@ -4,6 +4,7 @@ import requests
 Openrouteservice API class to perform API calls in the Truck class
 """
 
+
 class ApiOrs():
     """
     Openrouteservice Api object, used to fetch direction between two points
@@ -18,8 +19,8 @@ class ApiOrs():
     def __init__(self):
         self._key = "5b3ce3597851110001cf6248f022aa2ca82b4338a12afb1b17fbd16f"  # Need change to secure key
         self._base_url = (
-            "https://api.openrouteservice.org/v2/directions/driving-car?api_key"+
-            "="+
+            "https://api.openrouteservice.org/v2/directions/driving-car?api_key" +
+            "=" +
             self._key
             )
         self._headers = {
@@ -27,7 +28,7 @@ class ApiOrs():
             "Authorization": self._key,
         }
 
-    def get_direction(self, start:dict, end:dict):
+    def get_direction(self, start: dict, end: dict):
         """
         Method invoked to make a direction GET request to the API
 
