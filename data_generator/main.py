@@ -3,6 +3,16 @@ from truck import Truck
 import pandas as pd
 
 
+class Main():
+    def __init__(self):
+        self._writer = Csv_Writer()
+
+    def write(self, n):
+        """Write data locally for n simulations."""
+        for _ in range(n):
+            self._writer.run()
+
+
 class Csv_Writer():
     def __init__(self):
         self.id = 0
@@ -22,9 +32,3 @@ class Csv_Writer():
             'speed': result[3]
         })
         df.to_csv(name, header=True)
-
-
-if __name__ == '__main__':
-    writer = Csv_Writer()
-    for _ in range(50):
-        writer.run()
