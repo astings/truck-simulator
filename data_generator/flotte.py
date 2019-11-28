@@ -1,4 +1,9 @@
-"""Contain flotte class"""
+"""Flotte class, each Truck must belong to a Flotte. 
+
+Methods:
+    display_geojson
+    add_truck
+"""
 
 from geojsonio import display
 import json
