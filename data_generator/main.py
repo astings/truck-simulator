@@ -1,3 +1,5 @@
+"""Script to write local csv files from simulations."""
+
 from truck import Truck
 import pandas as pd
 import sys
