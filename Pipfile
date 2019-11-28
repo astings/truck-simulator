@@ -16,6 +16,7 @@ shapely = "*"
 pyplot = "*"
 matplotlib = "*"
 pandas = "*"
+pika = "*"
 
 [requires]
 python_version = "3.7"

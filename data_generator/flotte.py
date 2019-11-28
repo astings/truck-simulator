@@ -1,10 +1,18 @@
+"""Flotte class, each Truck must belong to a Flotte. 
+
+Methods:
+    display_geojson
+    add_truck
+"""
+
 from geojsonio import display
 import json
+from truck import Truck
 
 
 class Flotte():
     def __init__(self):
-        self.truck_list = []
+        self._truck_list = []
 
     def display_geojson(self):
         coord = []
@@ -16,3 +24,10 @@ class Flotte():
             "coordinates": coord
         }
         display(json.dumps(geo_object2))
+
+    def add_truck(self, truck):
+        """Add Truck object to Flotte."""
+        if not isinstance(Truck, truck):
+            raise ValueError("Can only add trucks to a flotte")
+        self._truck_list.append(truck)
+        truck.owner = self
