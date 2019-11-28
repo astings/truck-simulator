@@ -1,4 +1,4 @@
-"""Contain Truck class"""
+"""Contain Truck class with drive method used for simulations."""
 
 import math
 from random import uniform
@@ -6,16 +6,14 @@ from geojsonio import display
 import json
 import pyproj
 from flotte import Flotte
-from ors_api import ApiOrs
+from ors_api import get_direction
 from time import time, sleep
 from numpy.random import normal
 import sys
-from config import idf_polygon, isn2004, wgs84
+from config import IDF_POLYGON, ISN2004, WGS84
 
 
 class Truck:
-    api_ors = ApiOrs()
-
     def __init__(self,
                  id,
                  speed: int = 10):
@@ -86,8 +84,8 @@ class Truck:
     @staticmethod
     def _generate_random_point():
         """Generate random coordinate point in Ile-de-France."""
-        min_x, min_y = idf_polygon.bounds[0], idf_polygon.bounds[1]
-        max_x, max_y = idf_polygon.bounds[2], idf_polygon.bounds[3]
+        min_x, min_y = IDF_POLYGON.bounds[0], IDF_POLYGON.bounds[1]
+        max_x, max_y = IDF_POLYGON.bounds[2], IDF_POLYGON.bounds[3]
         return {
             "lng": uniform(min_x, max_x),
             "lat": uniform(min_y, max_y)
@@ -95,7 +93,7 @@ class Truck:
 
     def _generate_itinerary(self, start: dict, end: dict):
         """ Call API to retrieve itinerary coordinates between two points."""
-        self._saved_call = Truck.api_ors.get_direction(start, end)
+        self._saved_call = get_direction(start, end)
         if 'error' in self._saved_call.keys():
             sys.stdout.write('WAITING...')
             for i in range(10, 0, -1):
@@ -117,7 +115,7 @@ class Truck:
     def _change_coordinate_system(coord):
         """Transform WGS into Lambert 2004 coordinates."""
         temp_coordinate = []
-        transformer = pyproj.Transformer.from_proj(wgs84, isn2004)
+        transformer = pyproj.Transformer.from_proj(WGS84, ISN2004)
         # transform coordinates to comply with transformer format
         temp_coordinate = list(map(list, zip(*coord)))
         result = transformer.transform(temp_coordinate[0], temp_coordinate[1])
