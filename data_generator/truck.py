@@ -5,7 +5,6 @@ from random import uniform
 from geojsonio import display
 import json
 import pyproj
-from flotte import Flotte
 from ors_api import get_direction
 from time import time, sleep
 from numpy.random import normal
@@ -32,8 +31,6 @@ class Truck:
 
     @owner.setter
     def owner(self, value):
-        if not isinstance(Flotte, value):
-            raise ValueError('Owner must be Flotte object')
         self._owner = value
 
     @property

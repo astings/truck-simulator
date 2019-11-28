@@ -7,7 +7,7 @@ Methods:
 
 from geojsonio import display
 import json
-# from truck import Truck
+from truck import Truck
 
 
 class Flotte():
