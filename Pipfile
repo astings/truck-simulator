@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 requests = "*"
@@ -13,10 +14,11 @@ geojsonio = "*"
 pyproj = "*"
 ipykernel = "*"
 shapely = "*"
-pyplot = "*"
 matplotlib = "*"
 pandas = "*"
 pika = "*"
+psycopg2-binary = "*"
+sqlalchemy = "*"
 
 [requires]
 python_version = "3.7"
