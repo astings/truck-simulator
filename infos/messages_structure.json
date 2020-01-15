@@ -1,0 +1,15 @@
+{"position":
+    {"id_driver":"1",
+     "id_truck": "1",
+     "status": "0",
+     "id_itinerary":"1",
+     "position": "coord"}
+}
+
+
+{"itinerary": {
+    "id":"1",
+    "mission":"text",
+    "departure":"coord",
+    "arrival":"coord"
+}}
