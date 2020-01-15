@@ -184,6 +184,34 @@ class Truck:
             distance = main_distance
         return (L)
 
+    def get_position_at_time(self, time):
+        """Generate equally distanced coordinates."""
+        main_distance = 0
+        distance = 0
+        i = 0
+        while main_distance < sum(self._distances):
+            while time > 0:
+                time -= self._distances[i]/self._speeds[i]
+                i +=1
+
+            i-=1
+            time += self._distances[i]/self._speeds[i]
+            advancement = time*self._speeds[i] / self._distances[i]
+            current_x = (
+                    self._coord[i][0] +
+                    advancement * (self._coord[i+1][0] - self._coord[i][0])
+            )
+            current_y = (
+                    self._coord[i][1] +
+                    advancement * (self._coord[i+1][1] - self._coord[i][1]))
+
+            print(current_x, current_y)
+            return current_x, current_y
+
+        return self._coord[-1]
+
+
+
     def display_geojson(self):
         """Display itinerary on map."""
         geo_object2 = {
@@ -197,3 +225,10 @@ class Truck:
             }
         }
         display(json.dumps(geo_object2))
+
+
+if __name__ == '__main__':
+    truck = Truck(1)
+    truck.drive()
+    for i in range(100):
+        truck.get_position_at_time(i)
