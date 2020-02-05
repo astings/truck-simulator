@@ -17,8 +17,9 @@ shapely = "*"
 matplotlib = "*"
 pandas = "*"
 pika = "*"
-psycopg2-binary = "*"
 sqlalchemy = "*"
+psycopg2-binary = "*"
+geoalchemy2 = "*"
 
 [requires]
 python_version = "3.7"
