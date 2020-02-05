@@ -23,3 +23,7 @@ geoalchemy2 = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+consumer="python3 data_consumer/consumer.py"
+producer="python3 data_publisher/main.py"
