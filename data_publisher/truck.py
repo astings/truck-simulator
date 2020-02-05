@@ -188,53 +188,26 @@ class Truck:
         """Get position at given time in seconds."""
         main_distance = 0
         i = 0
-        while main_distance < sum(self._distances):
-            try:
-                while time > 0:
-                    time -= self._distances[i]/self._speeds[i]
-                    i += 1
+        while time > 0 and i < len(self._distances):
+            time -= self._distances[i]/self._speeds[i]
+            i += 1
 
-                i -= 1
-                time += self._distances[i]/self._speeds[i]
-                advancement = time*self._speeds[i] / self._distances[i]
-                current_x = (
-                        self._coord[i][0] +
-                        advancement * (self._coord[i+1][0] - self._coord[i][0])
-                )
-                current_y = (
-                        self._coord[i][1] +
-                        advancement * (self._coord[i+1][1] - self._coord[i][1]))
+        i -= 1
+        time += self._distances[i]/self._speeds[i]
+        advancement = time /(self._distances[i]/ self._speeds[i])
+        current_x = (
+                self._coord[i][0] +
+                advancement * (self._coord[i+1][0] - self._coord[i][0])
+        )
+        current_y = (
+                self._coord[i][1] +
+                advancement * (self._coord[i+1][1] - self._coord[i][1]))
 
-                return current_x, current_y
+        if i == (self._distances - 1) and advancement > 1 :
+            return self._coord[-1][0],self._coord[-1][1]
 
-            except:
-                return self._coord[-1]
+        return current_x, current_y
 
-        # return self._coord[-1]
-
-    # def get_position_at_time_2(self, time):
-    #     i = 0
-    #     for t in range(time+1):
-    #         try:
-    #             secondary_distance = 0
-    #             current_speed = self._speeds[i]
-    #             while secondary_distance < self._distances[i]:
-    #                 secondary_distance += current_speed
-    #             i += 1
-    #             advancement = secondary_distance / self._distances[i-1]
-    #             current_x = (
-    #                 self._coord[i-1][0] +
-    #                 advancement * (self._coord[i][0] - self._coord[i-1][0])
-    #             )
-    #             current_y = (
-    #                 self._coord[i-1][1] +
-    #                 advancement * (self._coord[i][1] - self._coord[i-1][1])
-    #             )
-    #         except:
-    #             current_x = self._coord[-1][0]
-    #             current_y = self._coord[-1][1]
-    #             break
-    #     return current_x, current_y
 
     def display_geojson(self):
         """Display itinerary on map."""
