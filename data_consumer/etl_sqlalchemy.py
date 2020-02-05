@@ -1,5 +1,11 @@
 from geoalchemy2 import *
-from etl_service.initiate_db import session, Driver, Itinerary, TruckPosition
+from initiate_db import session, Driver, Itinerary, TruckPosition
+
+
+def pos_to_string(position):
+    print(position)
+    template = 'POINT(%f %f)'
+    return template % (position[0], position[1])
 
 
 def truck_position_to_db(data):
@@ -10,7 +16,7 @@ def truck_position_to_db(data):
         status=data['status'],
         iditinerary=data['iditinerary'],
         timestamp=data['timestamp'],
-        position=WKTElement(data['position'], srid=4269)
+        position=WKTElement(pos_to_string(data['position']), srid=4269)
     )
 
     session.add(truck_position)
@@ -36,8 +42,8 @@ def itinerary_to_db(data):
 
     itinerary = Itinerary(
         mission=data['mission'],
-        departure=WKTElement(data['departure'], srid=4326),
-        arrival=WKTElement(data['arrival'], srid=4326)
+        departure=WKTElement(pos_to_string(data['departure']), srid=4326),
+        arrival=WKTElement(pos_to_string(data['arrival']), srid=4326)
     )
 
     session.add(itinerary)

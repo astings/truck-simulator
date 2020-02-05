@@ -1,6 +1,6 @@
 from geoalchemy2 import *
 from datetime import datetime
-from etl_service.initiate_db import session, Driver, Itinerary, TruckPosition
+from data_consumer.initiate_db import session, Driver, Itinerary, TruckPosition
 
 driver = Driver(
     firstname='Robin',
