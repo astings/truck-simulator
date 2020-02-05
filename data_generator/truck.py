@@ -186,29 +186,31 @@ class Truck:
 
     def get_position_at_time(self, time):
         """Generate equally distanced coordinates."""
-        main_distance = 0
-        distance = 0
         i = 0
-        while main_distance < sum(self._distances):
-            while time > 0:
-                time -= self._distances[i]/self._speeds[i]
-                i +=1
+        while time > 0 and i< len(self._distances):
+            time -= self._distances[i]/self._speeds[i]
+            i +=1
 
-            i-=1
-            time += self._distances[i]/self._speeds[i]
-            advancement = time*self._speeds[i] / self._distances[i]
-            current_x = (
-                    self._coord[i][0] +
-                    advancement * (self._coord[i+1][0] - self._coord[i][0])
-            )
-            current_y = (
-                    self._coord[i][1] +
-                    advancement * (self._coord[i+1][1] - self._coord[i][1]))
+        i-=1
+        time += self._distances[i]/self._speeds[i]
+        advancement = time / (self._distances[i] / self._speeds[i])
 
-            print(current_x, current_y)
-            return current_x, current_y
+        current_x = (
+                self._coord[i][0] +
+                advancement * (self._coord[i+1][0] - self._coord[i][0])
+        )
+        current_y = (
+                self._coord[i][1] +
+                advancement * (self._coord[i+1][1] - self._coord[i][1]))
 
-        return self._coord[-1]
+        if i == (len(self._distances) - 1)  and advancement > 1:
+            print(self._coord[-1][0], self._coord[-1][1])
+            return self._coord[-1][0],self._coord[-1][1]
+
+        print(current_x, current_y)
+        return current_x, current_y
+
+
 
 
 
@@ -230,5 +232,10 @@ class Truck:
 if __name__ == '__main__':
     truck = Truck(1)
     truck.drive()
-    for i in range(100):
+
+    for i in range(1000):
         truck.get_position_at_time(i)
+
+    print(truck._coord[0])
+    #print(len(truck._distances))
+    print(truck._coord[-1])
