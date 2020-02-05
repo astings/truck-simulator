@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  db:
+    restart: always
+    image: mdillon/postgis
+    ports:
+      - "5432:5432"
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db
+    volumes:
+      - ./docker/0_init.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - ./docker/postgresql/data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    container_name: rabbitmq
