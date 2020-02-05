@@ -16,7 +16,7 @@ class Flotte():
 
     def display_geojson(self):
         coord = []
-        for truck in self.truck_list:
+        for truck in self._truck_list:
             for coordonnee in truck.get_coordinates():
                 coord.append(coordonnee)
         geo_object2 = {
