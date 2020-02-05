@@ -16,7 +16,7 @@ def truck_position_to_db(data):
     session.add(truck_position)
     session.commit()
 
-    return 'done'
+    return 'Successful write'
 
 
 def driver_to_db(data):
