@@ -1,7 +1,7 @@
 """Script generating different graphs for speed visualisation."""
 
 from truck import Truck
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
 
 def dual_axis_plot(x_data, y1_data, y2_data, **kwargs):

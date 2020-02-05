@@ -13,10 +13,12 @@ geojsonio = "*"
 pyproj = "*"
 ipykernel = "*"
 shapely = "*"
-pyplot = "*"
 matplotlib = "*"
 pandas = "*"
 pika = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
+geoalchemy2 = "*"
 
 [requires]
 python_version = "3.7"
