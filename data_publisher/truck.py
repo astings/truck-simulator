@@ -203,7 +203,7 @@ class Truck:
                 self._coord[i][1] +
                 advancement * (self._coord[i+1][1] - self._coord[i][1]))
 
-        if i == (self._distances - 1) and advancement > 1 :
+        if i == (len(self._distances) - 1) and advancement > 1 :
             return self._coord[-1][0],self._coord[-1][1]
 
         return current_x, current_y
