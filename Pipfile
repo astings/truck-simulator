@@ -20,10 +20,13 @@ pika = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
 geoalchemy2 = "*"
+flask = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.7"
 
 [scripts]
 consumer="python3 data_consumer/consumer.py"
-producer="python3 data_publisher/main.py"
+publisher="python3 data_publisher/main.py"
+server="flask run"
