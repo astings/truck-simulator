@@ -18,7 +18,10 @@ def get_itinerate():
 
 @app.route('/trucks')
 def get_trucks():
-    truck_pos = session.query(TruckPosition).order_by(TruckPosition.identry.desc()).limit(5).all()
+    id_itineraries = session.query(Itinerary.iditinerary).all()
+    truck_pos = session.query(TruckPosition).\
+        filter(TruckPosition.iditinerary.in_(id_itineraries)).\
+        order_by(TruckPosition.identry.desc()).limit(len(id_itineraries)).all()
     ans = [[to_shape(pos.position).x, to_shape(pos.position).y] for pos in truck_pos]
     return jsonify(ans)
 

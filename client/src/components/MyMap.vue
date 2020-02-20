@@ -11,15 +11,14 @@
         :center.sync="center"
         :rotation.sync="rotation"
       ></vl-view>
-
+<!--
       <vl-feature id="point" :properties="{ prop: 'value', prop2: 'value' }">
         <vl-geom-point :coordinates="ans"></vl-geom-point>
       </vl-feature>
-
+ -->
       <vl-feature>
-        <vl-geom-line-string
-          :coordinates="trucks"
-        ></vl-geom-line-string>
+              <vl-geom-multi-point :coordinates="trucks">
+              </vl-geom-multi-point>
       </vl-feature>
 
       <vl-layer-tile id="osm">
