@@ -3,7 +3,6 @@ from initiate_db import session, Driver, Itinerary, TruckPosition
 
 
 def pos_to_string(position):
-    print(position)
     template = 'POINT(%f %f)'
     return template % (position[0], position[1])
 
