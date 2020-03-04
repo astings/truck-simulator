@@ -31,20 +31,21 @@ class Publisher(Thread):
         connection.close()
 
     def run(self):
-        departure, arrival = self.truck.drive()
-        journey_ended = False
-        t = 0
-        while not journey_ended:
+        self.truck.drive()
+        t = datetime.now()
+        while self.truck.status != "arrived":
             position = self.truck.get_position_at_time(t)
             payload = {
                 "iddriver": self.id_driver,
                 "idtruck": self.id_truck,
-                "status": 0,
+                "status": self.truck.status,
                 "iditinerary": self.id_itinerary,
                 "position": position,
                 "timestamp": datetime.now().strftime("%m/%d/%Y %H:%M:%S")
             }
-            journey_ended = position == arrival
             self.emit_message(payload)
-            t += 1
             time.sleep(1)
+            t = datetime.now()
+
+        self.run()
+

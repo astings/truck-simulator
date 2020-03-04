@@ -13,6 +13,7 @@ from truck import Truck
 class Flotte():
     def __init__(self):
         self._truck_list = []
+        self.hub_pos = {'lng': 2.410849, 'lat': 48.899747}
 
     def display_geojson(self):
         coord = []

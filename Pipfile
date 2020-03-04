@@ -22,6 +22,7 @@ psycopg2-binary = "*"
 geoalchemy2 = "*"
 flask = "*"
 flask-cors = "*"
+config = "*"
 
 [requires]
 python_version = "3.7"
