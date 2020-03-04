@@ -12,7 +12,6 @@ from ors_api import get_direction
 from numpy.random import normal
 import sys
 from config import IDF_POLYGON, ISN2004, WGS84
-import matplotlib.pyplot as plt
 
 class Truck():
     def __init__(self,
@@ -28,7 +27,7 @@ class Truck():
         self._plan_coord = []
         self._speeds = []
         self.departure_time = 0
-        self.current_pos = {'lng': 2.410849, 'lat': 48.899747}
+        self.current_pos = {'lng': 2.410232, 'lat': 48.900129}
         self.status = 0
 
     @property
@@ -51,8 +50,8 @@ class Truck():
 
     def drive(self):
         """Simulate truck movement along a random itinerary."""
-        if self.current_pos != {'lng': 2.410849, 'lat': 48.899747}:
-            end = {'lng': 2.410849, 'lat': 48.899747}
+        if self.current_pos != {'lng': 2.410232, 'lat': 48.900129}:
+            end = {'lng': 2.410232, 'lat': 48.900129}
         else :
             end = self._generate_random_point()
 
