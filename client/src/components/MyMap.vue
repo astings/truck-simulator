@@ -11,11 +11,11 @@
         :center.sync="center"
         :rotation.sync="rotation"
       ></vl-view>
-<!--
+
       <vl-feature id="point" :properties="{ prop: 'value', prop2: 'value' }">
         <vl-geom-point :coordinates="ans"></vl-geom-point>
       </vl-feature>
- -->
+
       <vl-feature>
               <vl-geom-multi-point :coordinates="trucks">
               </vl-geom-multi-point>
@@ -35,10 +35,9 @@ export default {
   name: 'MyMap',
   data() {
     return {
-      zoom: 15,
-      center: [2.253921, 48.82759],
+      zoom: 12,
+      center: [2.329, 48.859],
       rotation: 0,
-      pos: [3, 48.82759],
       ans: [0, 0],
       trucks: [0, 0],
     };
@@ -46,16 +45,25 @@ export default {
   methods: {
     call() {
       axios
-        .get('http://127.0.0.1:5000')
+        .get('http://localhost:5000')
         .then((response) => {
           this.ans = response.data;
+        })
+        .catch((err) => {
+          console.log(err);
         });
     },
     call_trucks() {
       axios
-        .get('http://127.0.0.1:5000/trucks')
+        .get('http://localhost:5000/trucks')
         .then((response) => {
           this.trucks = response.data;
+          // eslint-disable-next-line no-console
+          console.log(this.trucks);
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err);
         });
     },
     intervalFetchData() {

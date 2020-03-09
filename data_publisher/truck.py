@@ -94,7 +94,7 @@ class Truck:
         if 'error' in self._saved_call.keys():
             sys.stdout.write('WAITING...')
             for i in range(10, 0, -1):
-                sys.stdout.write(str(i)+'s ')
+                sys.stdout.write(str(i) + 's ')
                 sys.stdout.flush()
                 sleep(1)
             start = self._generate_random_point()
@@ -122,9 +122,9 @@ class Truck:
     def _get_distance(coord):
         """Compute distance between two coordinates."""
         distance = []
-        for i in range(len(coord)-1):
-            distance.append(math.sqrt(math.pow(coord[i+1][0]-coord[i][0], 2) +
-                                      math.pow(coord[i+1][1]-coord[i][1], 2)))
+        for i in range(len(coord) - 1):
+            distance.append(math.sqrt(math.pow(coord[i + 1][0] - coord[i][0], 2) +
+                                      math.pow(coord[i + 1][1] - coord[i][1], 2)))
         return distance
 
     def _generate_speeds(self, base_variation):
@@ -139,8 +139,8 @@ class Truck:
             if speed < 0:
                 speed = 0
             nb_coord_points = (
-                segment["way_points"][1] -
-                segment["way_points"][0] + 1
+                    segment["way_points"][1] -
+                    segment["way_points"][0] + 1
             )
             speeds.extend([speed] * nb_coord_points)
         return speeds
@@ -158,22 +158,22 @@ class Truck:
         current_timestamp = 0
         current_speed = self._speeds[0]
         while main_distance < sum(self._distances):
-            while distance > 0 and i < len(self._distances)-1:
+            while distance > 0 and i < len(self._distances) - 1:
                 distance -= self._distances[i]
                 i += 1
                 current_speed = self._speeds[i]
-            if self._distances[i-1] == 0:
+            if self._distances[i - 1] == 0:
                 i += 1
-            distance += self._distances[i-1]
-            advancement = distance / self._distances[i-1]
+            distance += self._distances[i - 1]
+            advancement = distance / self._distances[i - 1]
             current_timestamp += current_speed / step
             current_x = (
-                self._coord[i-1][0] +
-                advancement * (self._coord[i][0] - self._coord[i-1][0])
+                    self._coord[i - 1][0] +
+                    advancement * (self._coord[i][0] - self._coord[i - 1][0])
             )
             current_y = (
-                self._coord[i-1][1] +
-                advancement * (self._coord[i][1] - self._coord[i-1][1])
+                    self._coord[i - 1][1] +
+                    advancement * (self._coord[i][1] - self._coord[i - 1][1])
             )
             L.append([current_x,
                       current_y,
@@ -182,61 +182,28 @@ class Truck:
             i = 0
             main_distance += step
             distance = main_distance
-        return (L)
+        return L
 
     def get_position_at_time(self, time: int):
         """Get position at given time in seconds."""
         main_distance = 0
         i = 0
         while time > 0 and i < len(self._distances):
-            time -= self._distances[i]/self._speeds[i]
+            time -= self._distances[i] / self._speeds[i]
             i += 1
 
         i -= 1
-        time += self._distances[i]/self._speeds[i]
-        advancement = time /(self._distances[i]/ self._speeds[i])
+        time += self._distances[i] / self._speeds[i]
+        advancement = time / (self._distances[i] / self._speeds[i])
         current_x = (
                 self._coord[i][0] +
-                advancement * (self._coord[i+1][0] - self._coord[i][0])
+                advancement * (self._coord[i + 1][0] - self._coord[i][0])
         )
         current_y = (
                 self._coord[i][1] +
-                advancement * (self._coord[i+1][1] - self._coord[i][1]))
+                advancement * (self._coord[i + 1][1] - self._coord[i][1]))
 
-        if i == (len(self._distances) - 1) and advancement > 1 :
-            return self._coord[-1][0],self._coord[-1][1]
+        if i == (len(self._distances) - 1) and advancement > 1:
+            return self._coord[-1][0], self._coord[-1][1]
 
         return current_x, current_y
-
-
-    def display_geojson(self):
-        """Display itinerary on map."""
-        geo_object2 = {
-            "type": "Feature",
-            "geometry": {
-                "type": "MultiPoint",
-                "coordinates": self.coord
-            },
-            "properties": {
-                "name": "Truck %i" % self.num_id
-            }
-        }
-        display(json.dumps(geo_object2))
-
-
-if __name__ == '__main__':
-    truck = Truck(1)
-    start, end = truck.drive()
-    truck.get_coordinates()
-    stop = False
-    i = 0
-    while not stop:
-        start, end = truck._coord[0], truck._coord[-1]
-        # print("V2")
-        position_x, position_y = truck.get_position_at_time(i)
-        # print('%i || X: %f, Y: %f | End was X: %f, Y: %f' % (i, position_x, position_y, end[0], end[1]))
-        dist = truck._get_distance([(position_x, position_y), end])
-        # print('Remaining distance: %f' % dist[0])
-        i += 1
-        stop = (position_x == end[0] and position_y == end[1])
-    

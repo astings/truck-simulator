@@ -20,8 +20,4 @@ def run_trucks(n: int):
 
 
 if __name__ == '__main__':
-    if sys.argv[1]:
-        n = sys.argv[1]
-    else:
-        n = 4
-    run_trucks(n)
+    run_trucks(4)

@@ -1,8 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from geoalchemy2.shape import to_shape
-from back.initiate_db import session, Driver, TruckPosition, Itinerary
-
+from initiate_db import session, TruckPosition, Itinerary
 
 app = Flask(__name__)
 
@@ -19,9 +18,17 @@ def get_itinerate():
 @app.route('/trucks')
 def get_trucks():
     id_itineraries = session.query(Itinerary.iditinerary).all()
-    truck_pos = session.query(TruckPosition).\
-        filter(TruckPosition.iditinerary.in_(id_itineraries)).\
+    truck_pos = session.query(TruckPosition). \
+        filter(TruckPosition.iditinerary.in_(id_itineraries)). \
         order_by(TruckPosition.identry.desc()).limit(len(id_itineraries)).all()
     ans = [[to_shape(pos.position).x, to_shape(pos.position).y] for pos in truck_pos]
     return jsonify(ans)
 
+
+@app.route('/hello')
+def hello():
+    return jsonify("Hello")
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

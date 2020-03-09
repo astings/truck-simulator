@@ -31,14 +31,13 @@ IDF_POLYGON = Polygon(
      [2.2774870298138, 48.877968320853],
      [2.2915068524977, 48.8894718708],
      [2.3198871747441, 48.90045978209]]
-
 )
 
 ISN2004 = pyproj.Proj(
             "+proj=lcc +lat_1=64.25 +lat_2=65.75 +lat_0=65 +lon_0=-19 + x_0=1700000 +y_0=300000 +no_defs +a=6378137 +rf=298.257222101 +to_meter=1")
 
 #WGS84 = pyproj.Proj("+init=EPSG:4326")
-WGS84 = pyproj.Proj("EPSG:4326")
+WGS84 = pyproj.Proj({'init': 'epsg:2193', 'no_defs': True}, preserve_flags=True)
 
 ORS_URL = (
             "https://api.openrouteservice.org/v2/directions/" +

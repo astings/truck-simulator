@@ -1,9 +1,15 @@
 import pika
 import json
 from etl_sqlalchemy import truck_position_to_db
+import os
 
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host="localhost"))
+amqp_url = os.environ['AMQP_URL']
+print('URL: %s' % (amqp_url,))
+
+# Actually connect
+parameters = pika.URLParameters(amqp_url)
+connection = pika.BlockingConnection(parameters)
 channel = connection.channel()
 
 routing_key = 'journey.new'

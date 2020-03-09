@@ -4,6 +4,7 @@ import time
 from truck import Truck
 from datetime import datetime
 from threading import Thread
+import os
 
 
 class Publisher(Thread):
@@ -14,13 +15,15 @@ class Publisher(Thread):
         self.id_driver = id_driver
         self.id_itinerary = id_itinerary
         self.truck = Truck(self.id_truck)
+        self.connection = None
 
-    @staticmethod
-    def emit_message(payload):
-        connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host="localhost")
-        )
-        channel = connection.channel()
+    def emit_message(self, payload):
+        amqp_url = os.environ['AMQP_URL']
+        print('URL: %s' % (amqp_url,))
+
+        parameters = pika.URLParameters(amqp_url)
+        self.connection = pika.BlockingConnection(parameters)
+        channel = self.connection.channel()
 
         channel.queue_declare(queue='exchange', durable=True)
         channel.basic_publish(exchange='',
@@ -28,7 +31,7 @@ class Publisher(Thread):
                               body=json.dumps(payload),
                               )
         print(" [x] Message publisher %r" % payload)
-        connection.close()
+        self.connection.close()
 
     def run(self):
         departure, arrival = self.truck.drive()
