@@ -1,6 +1,5 @@
 """Script to run simulations on multiple truck."""
 from publisher import Publisher
-import sys
 
 
 def run_trucks(n: int):
@@ -21,4 +20,4 @@ def run_trucks(n: int):
 
 if __name__ == '__main__':
 
-    run_trucks(1)
+    run_trucks(4)

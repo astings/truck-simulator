@@ -16,11 +16,11 @@ services:
     networks:
       - network
 
-#  adminer:
-#    image: adminer
-#    restart: always
-#    ports:
-#      - "8081:8080"
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8081:8080"
 
   rabbitmq:
     image: rabbitmq:3-management
