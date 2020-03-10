@@ -58,8 +58,6 @@ export default {
         .get('http://localhost:5000/trucks')
         .then((response) => {
           this.trucks = response.data;
-          // eslint-disable-next-line no-console
-          console.log(this.trucks);
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

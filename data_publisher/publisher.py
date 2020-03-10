@@ -6,6 +6,8 @@ from datetime import datetime
 from threading import Thread
 import os
 
+amqp_url = 'amqp://rabbitmq'
+
 
 class Publisher(Thread):
 
@@ -18,7 +20,7 @@ class Publisher(Thread):
         self.connection = None
 
     def emit_message(self, payload):
-        amqp_url = os.environ['AMQP_URL']
+        #amqp_url = os.environ['AMQP_URL']
         print('URL: %s' % (amqp_url,))
 
         parameters = pika.URLParameters(amqp_url)
@@ -34,7 +36,7 @@ class Publisher(Thread):
         self.connection.close()
 
     def run(self):
-        departure, arrival = self.truck.drive()
+        self.truck.drive()
         journey_ended = False
         t = 0
         while not journey_ended:
@@ -47,7 +49,6 @@ class Publisher(Thread):
                 "position": position,
                 "timestamp": datetime.now().strftime("%m/%d/%Y %H:%M:%S")
             }
-            journey_ended = position == arrival
             self.emit_message(payload)
             t += 1
             time.sleep(1)

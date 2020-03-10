@@ -20,4 +20,5 @@ def run_trucks(n: int):
 
 
 if __name__ == '__main__':
-    run_trucks(4)
+
+    run_trucks(1)
