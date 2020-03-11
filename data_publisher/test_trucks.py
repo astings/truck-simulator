@@ -1,9 +1,11 @@
 import unittest
-from truck import Truck
+from data_publisher.truck import Truck
+
 
 class TruckTestCase(unittest.TestCase):
     def setUp(self):
         self.truck = Truck(id=1)
+        self.truck.drive()
     
     def test_default_truck_speed(self):
         self.assertEqual(self.truck.speed, 10, 'incorrect default speed')
@@ -12,6 +14,10 @@ class TruckTestCase(unittest.TestCase):
         self.truck.speed = 20
         self.assertEqual(self.truck.speed, 20,
                          'incorrect speed after change')
+    
+    def test_owner_setter(self):
+        self.truck.owner = 'test'
+        self.assertEqual(self.truck.owner, 'test', 'incorrect owner after change')
 
     def test_change_coord(self): 
         test_coords = [[32.12,33.1],[12,13]]
@@ -40,11 +46,6 @@ class TruckTestCase(unittest.TestCase):
     
     def test_parse_step(self):
         self.assertIsNotNone(self.truck._parse_steps_from_call(self.truck._saved_call))
-
-    def test_speed_list_length(self):
-        segments_len = len(self.truck._parse_steps_from_call(
-            self.truck._saved_call))
-        self.assertEqual(segments_len, self.truck._generate_speeds(0.5))
 
 if __name__ == '__main__':
     unittest.main()
