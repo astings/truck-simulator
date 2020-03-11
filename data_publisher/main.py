@@ -1,6 +1,5 @@
 """Script to run simulations on multiple truck."""
 from publisher import Publisher
-import sys
 
 
 def run_trucks(n: int):
@@ -20,8 +19,9 @@ def run_trucks(n: int):
 
 
 if __name__ == '__main__':
-    if sys.argv[1]:
+    if len(sys.argv) > 0:
         n = int(sys.argv[1])
     else:
         n = 4
     run_trucks(n)
+

@@ -227,16 +227,19 @@ class Truck:
 if __name__ == '__main__':
     truck = Truck(1)
     start, end = truck.drive()
+    print(start)
+    print(end)
     truck.get_coordinates()
     stop = False
     i = 0
     while not stop:
         start, end = truck._coord[0], truck._coord[-1]
-        # print("V2")
+        print("V2")
         position_x, position_y = truck.get_position_at_time(i)
-        # print('%i || X: %f, Y: %f | End was X: %f, Y: %f' % (i, position_x, position_y, end[0], end[1]))
+        print('%i || X: %f, Y: %f | Start was X: %f, Y: %f | End was X: %f, Y: %f' % (i, position_x, position_y,
+                                                                                      start[0], start[1],
+                                                                                      end[0], end[1]))
         dist = truck._get_distance([(position_x, position_y), end])
-        # print('Remaining distance: %f' % dist[0])
+        print('Remaining distance: %f' % dist[0])
         i += 1
         stop = (position_x == end[0] and position_y == end[1])
-    
