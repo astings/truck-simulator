@@ -19,5 +19,9 @@ def run_trucks(n: int):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) > 0:
+        n = int(sys.argv[1])
+    else:
+        n = 4
+    run_trucks(n)
 
-    run_trucks(4)
