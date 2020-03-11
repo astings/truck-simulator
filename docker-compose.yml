@@ -2,7 +2,6 @@ version: "3"
 
 services:
   postgres:
-    restart: always
     image: mdillon/postgis
     ports:
       - "5432:5432"
@@ -18,13 +17,13 @@ services:
 
   adminer:
     image: adminer
-    restart: always
     ports:
-      - "8081:8080"
+      - "8080:8080"
+    networks:
+      - network
 
   rabbitmq:
     image: rabbitmq:3-management
-    restart: always
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -36,7 +35,7 @@ services:
   client:
     build: client
     ports:
-      - "8080:80"
+      - "8081:80"
     networks:
       - network
 

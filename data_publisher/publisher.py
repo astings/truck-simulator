@@ -6,8 +6,6 @@ from datetime import datetime
 from threading import Thread
 import os
 
-amqp_url = 'amqp://rabbitmq'
-
 
 class Publisher(Thread):
 
@@ -20,8 +18,7 @@ class Publisher(Thread):
         self.connection = None
 
     def emit_message(self, payload):
-        #amqp_url = os.environ['AMQP_URL']
-        print('URL: %s' % (amqp_url,))
+        amqp_url = os.environ['AMQP_URL']
 
         parameters = pika.URLParameters(amqp_url)
         self.connection = pika.BlockingConnection(parameters)
