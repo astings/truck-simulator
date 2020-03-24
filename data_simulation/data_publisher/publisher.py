@@ -1,11 +1,12 @@
 import pika
 import json
 import time
-from truck import Truck
+import os
+import sys
 from datetime import datetime
 from threading import Thread
-import os
-
+from truck import Truck
+from db_utilis.etl_sqlalchemy import driver_to_db, itinerary_to_db
 
 class Publisher(Thread):
 
@@ -13,9 +14,25 @@ class Publisher(Thread):
         Thread.__init__(self)
         self.id_truck = id_truck
         self.id_driver = id_driver
+        new_driver = driver_to_db({'iddriver':id_driver})
         self.id_itinerary = id_itinerary
         self.truck = Truck(self.id_truck)
         self.connection = None
+        self.departure, self.arrival = self.truck.drive()
+        self.departure = [self.departure['lng'], self.departure['lat']]
+        self.arrival = [self.arrival['lng'], self.arrival['lat']]
+        new_itinerary = itinerary_to_db({'iditinerary':id_itinerary,
+                         'mission':'Undefined',
+                         'departure':self.departure,
+                         'arrival':self.arrival})
+        if new_driver == 0:
+            print('Driver id #%i created' % (self.id_driver))
+        elif new_driver == 1 :
+            print('Driver id #%i already in DB' % (self.id_driver))
+        if new_itinerary == 0:
+            print('Itinerary id #%i created' % (self.id_itinerary))
+        elif new_itinerary == 1 :
+            print('Itinerary id #%i already in DB' % (self.id_itinerary))
 
     def emit_message(self, payload):
         amqp_url = os.environ['AMQP_URL']
@@ -33,7 +50,6 @@ class Publisher(Thread):
         self.connection.close()
 
     def run(self):
-        self.truck.drive()
         journey_ended = False
         t = 0
         while not journey_ended:
@@ -44,7 +60,10 @@ class Publisher(Thread):
                 "status": 0,
                 "iditinerary": self.id_itinerary,
                 "position": position,
-                "timestamp": datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+                "timestamp": datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
+                "departure": self.departure,
+                "arrival": self.arrival,
+                "mission": "Unregistred"
             }
             self.emit_message(payload)
             t += 1

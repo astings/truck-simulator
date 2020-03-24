@@ -1,7 +1,8 @@
 import pika
 import json
-from etl_sqlalchemy import truck_position_to_db
+from etl_sqlalchemy import truck_position_to_db, truck_position_to_db_missing_foreign
 import os
+from sqlalchemy import exc
 
 
 amqp_url = os.environ['AMQP_URL']
@@ -20,7 +21,11 @@ print(' [*] Waiting for messages. To exit press CTRL+C')
 def callback(ch, method, properties, body):
     content = json.loads(body)
     print(" [x] Received %r" % json.loads(body))
-    truck_position_to_db(content)
+    try:
+        truck_position_to_db(content)
+    except:
+        print('Trying to add missing foreign keys')
+        truck_position_to_db_missing_foreign(content)
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 

@@ -11,7 +11,7 @@ def run_trucks(n: int):
     """
     trucks = list()
     for i in range(n):
-        trucks.append(Publisher(id_truck=i+1, id_driver=2, id_itinerary=i+2))
+        trucks.append(Publisher(id_truck=i+1, id_driver=2, id_itinerary=i))
         # TODO: id_driver & itinerary generation
     for truck in trucks:
         truck.start()
