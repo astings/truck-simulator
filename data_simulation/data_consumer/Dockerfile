@@ -4,3 +4,4 @@ RUN python -m pip install --upgrade pip \
   && python -m pip install geoalchemy2 sqlalchemy pika psycopg2 names
 
 COPY . .
+RUN ["chmod", "+x", "wait-for-it.sh"]

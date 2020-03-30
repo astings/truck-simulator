@@ -59,7 +59,7 @@ services:
       AMQP_URL: 'amqp://rabbitmq'
     networks:
       - network
-    command: ["python3", "main.py"]
+    command: ["./wait-for-it.sh","rabbitmq:15672","--","python3", "main.py"]
 
   data_consumer:
     build: data_simulation/data_consumer
@@ -68,7 +68,7 @@ services:
       AMQP_URL: 'amqp://rabbitmq'
     networks:
       - network
-    command: ['python3', 'consumer.py']
+    command: ["./wait-for-it.sh","rabbitmq:15672","--",'python3', 'consumer.py']
 
 networks:
   network: {}
