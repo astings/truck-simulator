@@ -1,7 +1,7 @@
 """Contain Truck class with drive method used for simulations."""
 
 import math
-from random import uniform
+from random import uniform, random
 from geojsonio import display
 import json
 import pyproj
@@ -24,6 +24,7 @@ class Truck:
         self._coord = []
         self._plan_coord = []
         self._speeds = []
+        self._statuses = []
 
     @property
     def owner(self):
@@ -55,6 +56,8 @@ class Truck:
         change_coord_sys_time = time()
         self._distances = self._get_distance(self._plan_coord)
         calc_dist_time = time()
+        self._statuses = self._generate_statuses()
+        generate_statuses_time = time()
         self._speeds = self._generate_speeds(0.5)
         generate_speeds_time = time()
 
@@ -68,11 +71,13 @@ class Truck:
                   (change_coord_sys_time - generate_itinerary_time))
             print('Calculate distances: %f' %
                   (calc_dist_time - change_coord_sys_time))
+            print('Generate statuses: %f' %
+                  (generate_statuses_time - calc_dist_time))
             print('Generate speeds: %f' %
-                  (generate_speeds_time - calc_dist_time))
+                  (generate_speeds_time - generate_statuses_time))
             print('____________________________')
             print('TOTAL : %f' %
-                  (generate_speeds_time - start_time))
+                  (generate_statuses_time - start_time))
             print('Number of coordinates: %i' %
                   (len(self._coord)))
 
@@ -126,6 +131,47 @@ class Truck:
             distance.append(math.sqrt(math.pow(coord[i+1][0]-coord[i][0], 2) +
                                       math.pow(coord[i+1][1]-coord[i][1], 2)))
         return distance
+    
+    @staticmethod
+    def _get_next_status(previous_status):
+        rand = random()
+        if previous_status is None:
+                return 'driving'
+        elif previous_status == 'driving':
+            if rand <= 0.95:
+                return 'driving'
+            elif rand <= 0.97:
+                return 'slow traffic'
+            else :
+                return 'full stop'
+        elif previous_status == 'slow traffic':
+            if rand <= 0.6:
+                return 'slow traffic'
+            elif rand <= 0.9:
+                return 'exiting slow traffic'
+            else:
+                return 'full stop'
+        elif previous_status == 'full stop':
+            if rand <= 0.6:
+                return 'full stop'
+            elif rand <= 0.9:
+                return 'slow traffic'
+            else:
+                return 'exiting slow traffic'
+        elif previous_status == 'exiting slow traffic':
+            return 'driving'
+        else:
+            print('Unknown status passed, defaulting to driving')
+            return 'driving'
+    
+    def _generate_statuses(self):
+        segments = self._parse_steps_from_call(self._saved_call)
+        previous_status = None
+        statuses = list()
+        for segment in segments:
+            previous_status = self._get_next_status(previous_status)
+            statuses.append(previous_status)
+        return statuses   
 
     def _generate_speeds(self, base_variation):
         """Simulate speeds along itinerary."""
@@ -134,15 +180,34 @@ class Truck:
         segments = self._parse_steps_from_call(self._saved_call)
         speed = self._speed
         speeds = list()
-        for segment in segments:
-            speed += base_variation * normal(0, 2, 1)[0]
-            if speed < 0:
-                speed = 0
+        for i, segment in enumerate(segments):
+            if self._statuses[i] == 'driving':
+                speed += base_variation * normal(0, 2, 1)[0]
+                if speed < 5:
+                    speed = 5
+            elif self._statuses[i] == 'exiting slow traffic':
+                speed = 10 + base_variation * normal(0, 2, 1)[0]
+            elif self._statuses[i] == 'slow traffic':
+                if speed > 5:
+                    speed += (5 - speed) * abs(normal(0,0.6,1)[0])
+                else:
+                    speed += base_variation * normal(0, 2, 1)[0]
+                if speed < 2:
+                    speed = 2
+            elif self._statuses[i] == 'full stop':
+                speed = 0.5
+            else:
+                print('Unknown status, defaulting to driving...')
+                speed += base_variation * normal(0, 2, 1)[0]
+                if speed < 5:
+                    speed = 5
+
             nb_coord_points = (
                 segment["way_points"][1] -
                 segment["way_points"][0] + 1
             )
             speeds.extend([speed] * nb_coord_points)
+            print(f'Status {self._statuses[i]} at speed {speed}')
         return speeds
 
     @staticmethod
@@ -207,6 +272,13 @@ class Truck:
             return self._coord[-1][0],self._coord[-1][1]
 
         return current_x, current_y
+    
+    def get_status_at_time(self, time:int):
+        i = 0
+        while time > 0 and i < len(self._distances):
+            time -= self._distances[i]/self._speeds[i]
+            i += 1
+        return self._statuses[i-1]
 
 
     def display_geojson(self):
@@ -230,16 +302,18 @@ if __name__ == '__main__':
     print(start)
     print(end)
     truck.get_coordinates()
-    stop = False
-    i = 0
-    while not stop:
-        start, end = truck._coord[0], truck._coord[-1]
-        print("V2")
-        position_x, position_y = truck.get_position_at_time(i)
-        print('%i || X: %f, Y: %f | Start was X: %f, Y: %f | End was X: %f, Y: %f' % (i, position_x, position_y,
-                                                                                      start[0], start[1],
-                                                                                      end[0], end[1]))
-        dist = truck._get_distance([(position_x, position_y), end])
-        print('Remaining distance: %f' % dist[0])
-        i += 1
-        stop = (position_x == end[0] and position_y == end[1])
+    # stop = False
+    # i = 0
+    # while not stop:
+    #     start, end = truck._coord[0], truck._coord[-1]
+    #     print("V2")
+    #     position_x, position_y = truck.get_position_at_time(i)
+    #     print('%i || X: %f, Y: %f | Start was X: %f, Y: %f | End was X: %f, Y: %f' % (i, position_x, position_y,
+    #                                                                                   start[0], start[1],
+    #                                                                                   end[0], end[1]))
+    #     dist = truck._get_distance([(position_x, position_y), end])
+    #     print('Remaining distance: %f' % dist[0])
+    #     i += 1
+
+        
+        
