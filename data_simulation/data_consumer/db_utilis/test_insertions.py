@@ -1,7 +1,7 @@
 """[A reprendre] Tests for database insertions"""
 from geoalchemy2 import WKTElement
 from datetime import datetime
-from initiate_db import session, Driver, Itinerary, TruckPosition
+from db_utilis.initiate_db import session, Driver, Itinerary, TruckPosition
 import unittest
 
 class DbTestCase(unittest.TestCase):

@@ -1,7 +1,7 @@
 """ETL functions to work with the DB"""
 
 from geoalchemy2 import *
-from initiate_db import session, Driver, Itinerary, TruckPosition
+from db_utilis.initiate_db import session, Driver, Itinerary, TruckPosition
 import names
 
 
