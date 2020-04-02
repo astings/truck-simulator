@@ -18,6 +18,7 @@ def dual_axis_plot(x_data, y1_data, y2_data, **kwargs):
     ax1.set_ylabel(label_y1)
     ax2 = ax1.twinx()
     ax2.plot(x_data, y2_data, color=color_y2)
+    ax2.set_ylim(0,80)
     ax2.set_ylabel(label_y2)
 
     fig.tight_layout()
