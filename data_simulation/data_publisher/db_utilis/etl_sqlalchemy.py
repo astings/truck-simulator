@@ -1,3 +1,4 @@
+"""ETL functions to work with the DB"""
 from geoalchemy2 import WKTElement
 from db_utilis.initiate_db import session, Driver, Itinerary, TruckPosition
 import names

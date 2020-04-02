@@ -1,9 +1,12 @@
+"""ETL functions to work with the DB"""
+
 from geoalchemy2 import *
 from initiate_db import session, Driver, Itinerary, TruckPosition
 import names
 
 
 def pos_to_string(position):
+    
     template = 'POINT(%f %f)'
     return template % (position[0], position[1])
 
@@ -20,22 +23,6 @@ def truck_position_to_db(data):
     session.add(truck_position)
     session.commit()
     return f'Truck position {truck_position.position} written successfully'
-
-
-    # new_driver = driver_to_db(data) 
-    # new_itinerary = itinerary_to_db(data)
-    # if new_driver == 1 and new_itinerary == 1:
-    #     print('Unknown error occured (both driver and itinerary already existed.')
-    # elif new_driver == 1 and new_itinerary == 0:
-    #     print("Driver already existed in DB, itinerary added")
-    # elif new_driver == 0 and new_itinerary == 1:
-    #     print("Itinerary already existed in DB, driver added")
-    # elif new_driver == 0 and new_itinerary == 0:
-    #     print("Itinerary and driver added")
-    # else:
-    #     print('Unknown error, printing debugging info')
-    #     print(f"Driver exists? {driver_exists(data['idriver'])}")
-    #     print(f"Itinerary exists? {driver_exists(data['iditinerary'])}")
 
 def truck_position_to_db_missing_foreign(data):
     session.rollback()

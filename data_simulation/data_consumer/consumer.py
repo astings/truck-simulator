@@ -1,6 +1,8 @@
+"""Consumer script awaiting for db write orders"""
+
 import pika
 import json
-from etl_sqlalchemy import truck_position_to_db, truck_position_to_db_missing_foreign
+from db_utilis.etl_sqlalchemy import truck_position_to_db, truck_position_to_db_missing_foreign
 import os
 from sqlalchemy import exc
 
