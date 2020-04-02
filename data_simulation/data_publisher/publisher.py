@@ -54,10 +54,11 @@ class Publisher(Thread):
         t = 0
         while not journey_ended:
             position = self.truck.get_position_at_time(t)
+            status = self.truck.get_status_at_time(t)
             payload = {
                 "iddriver": self.id_driver,
                 "idtruck": self.id_truck,
-                "status": 0,
+                "status": status,
                 "iditinerary": self.id_itinerary,
                 "position": position,
                 "timestamp": datetime.now().strftime("%m/%d/%Y %H:%M:%S"),
