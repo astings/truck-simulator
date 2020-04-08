@@ -1,12 +1,10 @@
 version: "3"
 
 services:
-  db:
-    restart: always
+  postgres:
     image: mdillon/postgis
     ports:
       - "5432:5432"
-    container_name: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -14,12 +12,19 @@ services:
     volumes:
       - ./docker/0_init.sql:/docker-entrypoint-initdb.d/0_init.sql
       - ./docker/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - network
+    logging:
+      driver: none
 
   adminer:
     image: adminer
-    restart: always
     ports:
       - "8080:8080"
+    networks:
+      - network
+    logging:
+      driver: none
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -27,3 +32,50 @@ services:
       - "15672:15672"
       - "5672:5672"
     container_name: rabbitmq
+    hostname: rabbitmq
+    networks:
+      - network
+    logging:
+      driver: none
+
+  client:
+    build: client
+    ports:
+      - "8081:80"
+    networks:
+      - network
+
+  back:
+    build: back
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "5000:5000"
+    volumes:
+      - "./:/app"
+    networks:
+      - network
+    command : ['python3', 'app.py']
+
+  data_publisher:
+    build: data_simulation/data_publisher
+    restart: always
+    environment:
+      AMQP_URL: 'amqp://rabbitmq'
+      NB_TRUCK: $NB_TRUCK
+    networks:
+      - network
+    command: ["./wait-for-it.sh","rabbitmq:15672","--","python3", "main.py"]
+
+  data_consumer:
+    build: data_simulation/data_consumer
+    restart: always
+    environment:
+      AMQP_URL: 'amqp://rabbitmq'
+    networks:
+      - network
+    command: ["./wait-for-it.sh","rabbitmq:15672","--",'python3', 'consumer.py']
+
+networks:
+  network: {}

@@ -21,7 +21,7 @@ CREATE EXTENSION postgis;
 
 CREATE TABLE driver
 (
-    iddriver  varchar
+    iddriver  SERIAL
         constraint driver_pk
             primary key,
     firstname varchar,
@@ -30,7 +30,7 @@ CREATE TABLE driver
 
 CREATE TABLE itinerary
 (
-    iditinerary varchar
+    iditinerary SERIAL
         constraint itinerary_pk
             primary key,
     mission varchar,
@@ -40,15 +40,15 @@ CREATE TABLE itinerary
 
 CREATE TABLE truck_position
 (
-    identry varchar not null
+    identry SERIAL not null
         constraint truck_position_pk
             primary key,
-    iddriver varchar
+    iddriver integer
         constraint truck_position_driver_iddriver_fk
             references driver,
     idtruck varchar,
     status varchar,
-    iditinerary varchar
+    iditinerary integer
         constraint truck_position_itinerary_iditinerary_fk
             references itinerary,
     timestamp timestamp,

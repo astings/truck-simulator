@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 requests = "*"
@@ -13,10 +14,21 @@ geojsonio = "*"
 pyproj = "*"
 ipykernel = "*"
 shapely = "*"
-pyplot = "*"
 matplotlib = "*"
 pandas = "*"
 pika = "*"
+sqlalchemy = "*"
+psycopg2-binary = "*"
+geoalchemy2 = "*"
+flask = "*"
+flask-cors = "*"
+pylint = "*"
+names = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+consumer="python3 data_consumer/consumer.py"
+publisher="python3 data_publisher/main.py"
+server="flask run"
