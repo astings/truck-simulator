@@ -1,8 +1,8 @@
 FROM python:3.7
 
-RUN python -m pip install --upgrade pip \
-  && python -m pip install geoalchemy2 sqlalchemy flask flask_cors shapely psycopg2
-
 COPY . .
+
+RUN python -m pip install --upgrade pip \
+  && python -m pip install -r requirements.txt
 
 EXPOSE 5000
