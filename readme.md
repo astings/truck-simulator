@@ -7,8 +7,6 @@
   * [Data producer](#data-producer)
   * [Data consumer](#data-consumer)
   * [Database](#database)
-  * [Run database](#run-database)
-
 
 ## Installation and basic usage
 
