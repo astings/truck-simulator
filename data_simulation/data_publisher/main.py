@@ -1,7 +1,7 @@
 """Script to run simulations on multiple truck."""
 from publisher import Publisher
 import sys
-
+from os import environ
 
 def run_trucks(n: int):
     """Runs simulation for n trucks in parallel.
@@ -20,9 +20,11 @@ def run_trucks(n: int):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        n = int(sys.argv[1])
+    if environ.get('NB_TRUCK') is not None:
+        n = int(environ.get('NB_TRUCK'))
+        print(f'Environement variable fetched, n = {n}')
     else:
         n = 4
+        print(f'Environement variable not fetched, n = {n}')
     run_trucks(n)
 
