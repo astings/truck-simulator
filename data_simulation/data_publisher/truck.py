@@ -251,7 +251,6 @@ class Truck:
 
     def get_position_at_time(self, time: int):
         """Get position at given time in seconds."""
-        main_distance = 0
         i = 0
         while time > 0 and i < len(self._distances):
             time -= self._distances[i]/self._speeds[i]
@@ -280,40 +279,13 @@ class Truck:
             i += 1
         return self._statuses[i-1]
 
-
-    def display_geojson(self):
-        """Display itinerary on map."""
-        geo_object2 = {
-            "type": "Feature",
-            "geometry": {
-                "type": "MultiPoint",
-                "coordinates": self.coord
-            },
-            "properties": {
-                "name": "Truck %i" % self.num_id
-            }
-        }
-        display(json.dumps(geo_object2))
-
-
 if __name__ == '__main__':
     truck = Truck(1)
     start, end = truck.drive()
     print(start)
     print(end)
     truck.get_coordinates()
-    # stop = False
-    # i = 0
-    # while not stop:
-    #     start, end = truck._coord[0], truck._coord[-1]
-    #     print("V2")
-    #     position_x, position_y = truck.get_position_at_time(i)
-    #     print('%i || X: %f, Y: %f | Start was X: %f, Y: %f | End was X: %f, Y: %f' % (i, position_x, position_y,
-    #                                                                                   start[0], start[1],
-    #                                                                                   end[0], end[1]))
-    #     dist = truck._get_distance([(position_x, position_y), end])
-    #     print('Remaining distance: %f' % dist[0])
-    #     i += 1
+
 
         
         
