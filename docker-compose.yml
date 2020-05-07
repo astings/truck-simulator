@@ -47,7 +47,6 @@ services:
 
   back:
     build: back
-    restart: always
     depends_on:
       - postgres
     ports:
@@ -60,7 +59,6 @@ services:
 
   data_publisher:
     build: data_simulation/data_publisher
-    restart: always
     environment:
       AMQP_URL: 'amqp://rabbitmq'
       NB_TRUCK: $NB_TRUCK
@@ -70,7 +68,6 @@ services:
 
   data_consumer:
     build: data_simulation/data_consumer
-    restart: always
     environment:
       AMQP_URL: 'amqp://rabbitmq'
     networks:
